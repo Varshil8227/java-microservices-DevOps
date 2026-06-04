@@ -46,7 +46,7 @@ spec:
                   name: microservices-config
                   key: EUREKA_HOSTNAME
             # 🔥 MongoDB Atlas Spring Boot Fix
-            - name: SPRING_DATA_MONGODB_URI
+            - name: MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: microservices-secrets

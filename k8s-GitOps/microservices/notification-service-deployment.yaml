@@ -45,12 +45,12 @@ spec:
                 configMapKeyRef:
                   name: microservices-config
                   key: EUREKA_HOSTNAME
-            - name: SPRING_DATA_MONGODB_URI
+            - name: MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: microservices-secrets
                   key: MONGODB_URI_NOTIFICATION
-            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+            - name: KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:
                   name: microservices-config
