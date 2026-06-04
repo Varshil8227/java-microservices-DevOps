@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: gateway-service
-          image: varshil1110/java-microservice-gateway:6c8f7c5bd4e178e4d0d599365cfc183415ee1f20
+          image: varshil1110/java-microservice-gateway:ff77534bdf3c287047931f2b1f4c66676db5c8fa
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8222
