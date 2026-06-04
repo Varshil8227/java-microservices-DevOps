@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: varshil1110/java-microservice-product:66c425946e001063ddee62f140bd8e238b0f2102
+          image: varshil1110/java-microservice-product:2b796804683c442d24ad9623370a9648f2879877
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8050
