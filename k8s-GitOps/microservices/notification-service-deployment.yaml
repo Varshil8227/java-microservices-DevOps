@@ -38,11 +38,11 @@ spec:
                 configMapKeyRef:
                   name: microservices-config
                   key: EUREKA_HOSTNAME
-            - name: MONGODB_URI
+            - name: MONGODB_URI_NOTIFICATION
               valueFrom:
                 secretKeyRef:
                   name: microservices-secrets
-                  key: MONGODB_URI
+                  key: MONGODB_URI_NOTIFICATION
             - name: KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:
