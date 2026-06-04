@@ -121,7 +121,7 @@ jobs:
             FILE_FOUND=false
             for path in "${PATHS[@]}"; do
               if [ -f "$path" ]; then
-                sed -i -E "s|(image:.*java-microservice-${service}):.*|\1:${{ github.sha }}|g" "$path"
+                sed -i -E "s|image: .*/java-microservice-${service}:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/java-microservice-${service}:${{ github.sha }}|g" "$path"
                 echo "✅ Updated: $path"
                 FILE_FOUND=true
                 break
