@@ -88,7 +88,7 @@ jobs:
 
 
   # ==========================================
-  # GITOPS STAGE: Update Manifests Automatically (Single Unified Commit)
+  # GITOPS STAGE: Update Manifests Automatically (Bulletproof Fix)
   # ==========================================
   update-gitops:
     name: "GitOps — Update All Image Tags"
@@ -100,19 +100,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0 # આખી ગીટ હિસ્ટ્રી ખેંચશે જેથી રીબેઝમાં ક્યારેય પ્રોબ્લેમ ન આવે
 
       - name: "Update Image Tags for All 8 Services"
         run: |
           echo "🔄 Scanning and updating manifests to SHA: ${{ github.sha }}..."
           
-          # બધી ૮ સર્વિસિસનું લિસ્ટ
           SERVICES=("config-server" "customer" "discovery" "gateway" "notification" "order" "payment" "product")
           
-          # લૂપ ચલાવીને બધી જ ફાઇલો ઓટોમેટિકલી શોધીને અપડેટ કરશે
           for service in "${SERVICES[@]}"; do
-            echo "Processing service: $service"
-            
-            # ફાઇલ શોધવા માટેના સંભવિત પાથ (સેફ્ટી ગાર્ડ)
             PATHS=(
               "k8s-GitOps/microservices/${service}-deployment.yaml"
               "k8s-GitOps/microservices/${service}-service-deployment.yaml"
@@ -122,7 +118,6 @@ jobs:
             FILE_FOUND=false
             for path in "${PATHS[@]}"; do
               if [ -f "$path" ]; then
-                # સાચો 'sed' કમાન્ડ જે ઇમેજના નામને ટ્રેક કરીને ટેગ બદલશે
                 sed -i -E "s|(image:.*java-microservice-${service}):.*|\1:${{ github.sha }}|g" "$path"
                 echo "✅ Updated: $path"
                 FILE_FOUND=true
@@ -131,30 +126,33 @@ jobs:
             done
             
             if [ "$FILE_FOUND" = false ]; then
-              echo "⚠️ Warning: Could not find manifest file for $service, skipping."
+              echo "⚠️ Warning: Could not find manifest file for $service"
             fi
           done
         shell: bash
 
       - name: "Single Unified Commit and Push to GitOps Repo"
         run: |
+          # ૧. ગીટ બોટ કન્ફિગર કરો
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # ૧. સ્ટેજિંગ એરિયામાં બધી જ YAML ફાઇલો એડ કરો
+          # ૨. બધી બદલાયેલી ફાઇલો એડ કરો
           git add k8s-GitOps/microservices/*.yaml
           
-          # ૨. ચેક કરો કે ખરેખર કોઈ ફેરફાર થયો છે કે નહીં
+          # ૩. ચેક કરો કે કોઈ ચેન્જ છે કે નહીં
           if git diff-index --quiet HEAD; then
-            echo "No changes detected in manifests. Skipping commit."
+            echo "No changes detected in manifests. Skipping deployment."
           else
-            # ૩. કમિટ કરતા પહેલા લેટેસ્ટ ગીટ હિસ્ટ્રી સિંક કરો
-            git pull origin main --rebase
-            
-            # ૪. એક જ સિંગલ કમિટ મેસેજ [skip ci] સાથે જેથી કોઈ લૂપ ન બને
+            # ૪. 🔥 પહેલા લોકલી કમિટ કરી લો (જેથી ઇન્ડેક્સ ક્લીન થઈ જાય!)
             git commit -m "chore(gitops): auto-update all microservices tags to ${{ github.sha }} [skip ci]"
             
-            # ૫. ફાઇનલ પુશ
+            # ૫. હવે કમિટ થઈ ગયા પછી રીબેઝ કરો - ગીટ આને સ્મૂથલી હેન્ડલ કરી લેશે
+            echo "🔄 Pulling latest remote changes with rebase..."
+            git pull origin main --rebase
+            
+            # ૬. ફાઇનલ પુશ ક્લાઉડ પર
+            echo "🚀 Pushing final changes to GitHub..."
             git push origin main
           fi
         shell: bash
