@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: notification-service
-          image: varshil1110/java-microservice-notification:latest
+          image: varshil1110/java-microservice-notification:89192df1f41cb52c5fd16759c8eef2b8ffcde8d0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8040

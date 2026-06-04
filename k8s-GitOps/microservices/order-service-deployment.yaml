@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: varshil1110/java-microservice-order:latest
+          image: varshil1110/java-microservice-order:89192df1f41cb52c5fd16759c8eef2b8ffcde8d0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8070

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: payment-service
-          image: varshil1110/java-microservice-payment:latest
+          image: varshil1110/java-microservice-payment:89192df1f41cb52c5fd16759c8eef2b8ffcde8d0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8060
