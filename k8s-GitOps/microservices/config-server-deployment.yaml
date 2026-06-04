@@ -22,8 +22,20 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "native"
+            - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
+              value: "true"
+            - name: MANAGEMENT_HEALTH_LIVENESSSTATE_ENABLED
+              value: "true"
+            - name: MANAGEMENT_HEALTH_READINESSSTATE_ENABLED
+              value: "true"
           
           # 🔥 મોટો ફિક્સ: સ્પ્રિંગ બૂટને બૂટ થવા માટે પૂરો ટાઈમ આપો
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8888
+            failureThreshold: 30
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
