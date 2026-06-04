@@ -1,0 +1,6 @@
+server:
+  port: 8090
+spring:
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://alibou:alibou@localhost:27017/customer?authSource=admin}

@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  namespace: default
+  labels:
+    app: notification-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service
+          image: varshil1110/java-microservice-notification:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8040
+              name: http
+          env:
+            - name: CONFIG_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: microservices-config
+                  key: CONFIG_SERVER_URL
+            - name: EUREKA_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: microservices-config
+                  key: EUREKA_SERVER_URL
+            - name: EUREKA_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: microservices-config
+                  key: EUREKA_HOSTNAME
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-secrets
+                  key: MONGODB_URI
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: microservices-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+            - name: MAIL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: microservices-config
+                  key: MAIL_HOST
+            - name: MAIL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: microservices-config
+                  key: MAIL_PORT
+            - name: MAIL_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-secrets
+                  key: MAIL_USERNAME
+            - name: MAIL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: microservices-secrets
+                  key: MAIL_PASSWORD
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8040
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8040
+            initialDelaySeconds: 40
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  namespace: default
+spec:
+  ports:
+    - port: 8040
+      targetPort: 8040
+  selector:
+    app: notification-service
