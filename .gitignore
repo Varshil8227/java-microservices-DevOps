@@ -12,3 +12,4 @@ kubeseal
 *.tar.gz
 !k8s-GitOps/microservices/secrets.yaml
 **/my-cluster-key.pem
+

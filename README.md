@@ -1,3 +1,5 @@
+kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo
+
 to save key in my-cluster-key.pem
 
 kubeseal --cert my-cluster-key.pem --format yaml < k8s-GitOps/microservices/secrets.yaml > k8s-GitOps/microservices/sealed-secrets.yaml
