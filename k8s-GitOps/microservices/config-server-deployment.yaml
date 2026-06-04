@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: config-server
-          image: varshil1110/java-microservice-config-server:a943ad6e8a5573793addbd79392338e46a0d7cb6
+          image: varshil1110/java-microservice-config-server:66c425946e001063ddee62f140bd8e238b0f2102
           ports:
             - containerPort: 8888
               name: http
