@@ -95,12 +95,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push-docker
     
+    permissions:
+      contents: write   # ← THIS is what was missing
+
     steps:
       - name: "Checkout Source Code"
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0 # આખી ગીટ હિસ્ટ્રી ખેંચશે જેથી રીબેઝમાં ક્યારેય પ્રોબ્લેમ ન આવે
+          fetch-depth: 0
 
       - name: "Update Image Tags for All 8 Services"
         run: |
@@ -133,25 +136,19 @@ jobs:
 
       - name: "Single Unified Commit and Push to GitOps Repo"
         run: |
-          # ૧. ગીટ બોટ કન્ફિગર કરો
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # ૨. બધી બદલાયેલી ફાઇલો એડ કરો
           git add k8s-GitOps/microservices/*.yaml
           
-          # ૩. ચેક કરો કે કોઈ ચેન્જ છે કે નહીં
           if git diff-index --quiet HEAD; then
             echo "No changes detected in manifests. Skipping deployment."
           else
-            # ૪. 🔥 પહેલા લોકલી કમિટ કરી લો (જેથી ઇન્ડેક્સ ક્લીન થઈ જાય!)
             git commit -m "chore(gitops): auto-update all microservices tags to ${{ github.sha }} [skip ci]"
             
-            # ૫. હવે કમિટ થઈ ગયા પછી રીબેઝ કરો - ગીટ આને સ્મૂથલી હેન્ડલ કરી લેશે
             echo "🔄 Pulling latest remote changes with rebase..."
             git pull origin main --rebase
             
-            # ૬. ફાઇનલ પુશ ક્લાઉડ પર
             echo "🚀 Pushing final changes to GitHub..."
             git push origin main
           fi
