@@ -22,6 +22,13 @@ spec:
           ports:
             - containerPort: 8761
               name: http
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
           env:
             - name: CONFIG_SERVER_URL
               valueFrom:
@@ -32,13 +39,13 @@ spec:
             httpGet:
               path: /actuator/health/readiness
               port: 8761
-            initialDelaySeconds: 20
+            initialDelaySeconds: 50
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8761
-            initialDelaySeconds: 30
+            initialDelaySeconds: 70
             periodSeconds: 20
 ---
 apiVersion: v1

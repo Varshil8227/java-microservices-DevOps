@@ -22,6 +22,13 @@ spec:
           ports:
             - containerPort: 8050
               name: http
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
           env:
             - name: CONFIG_SERVER_URL
               valueFrom:
@@ -64,13 +71,13 @@ spec:
             httpGet:
               path: /actuator/health/readiness
               port: 8050
-            initialDelaySeconds: 35
+            initialDelaySeconds: 60
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8050
-            initialDelaySeconds: 45
+            initialDelaySeconds: 80
             periodSeconds: 20
 ---
 apiVersion: v1

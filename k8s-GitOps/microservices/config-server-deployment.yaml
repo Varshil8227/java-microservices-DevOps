@@ -3,8 +3,6 @@ kind: Deployment
 metadata:
   name: config-server
   namespace: default
-  labels:
-    app: config-server
 spec:
   replicas: 1
   selector:
@@ -18,34 +16,27 @@ spec:
       containers:
         - name: config-server
           image: varshil1110/java-microservice-config-server:a943ad6e8a5573793addbd79392338e46a0d7cb6
+<<<<<<< HEAD
           imagePullPolicy: IfNotPresent
+=======
+>>>>>>> d808e92 (updates k8s microservices)
           ports:
             - containerPort: 8888
               name: http
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: native
+              value: "native"
+          
+          # 🔥 મોટો ફિક્સ: સ્પ્રિંગ બૂટને બૂટ થવા માટે પૂરો ટાઈમ આપો
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8888
-            initialDelaySeconds: 20
+            initialDelaySeconds: 60  # 30 થી વધારીને 60 કર્યો
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8888
-            initialDelaySeconds: 30
+            initialDelaySeconds: 80  # 40 થી વધારીને 80 કર્યો
             periodSeconds: 20
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: config-server
-  namespace: default
-spec:
-  ports:
-    - port: 8888
-      targetPort: 8888
-  selector:
-    app: config-server

@@ -45,21 +45,16 @@ spec:
                 configMapKeyRef:
                   name: microservices-config
                   key: EUREKA_HOSTNAME
-            
-            # 🔥 MongoDB Atlas Connection Fix
             - name: SPRING_DATA_MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: microservices-secrets
                   key: MONGODB_URI_NOTIFICATION
-
-            # 🔥 Spring Boot Standard Kafka Variable
             - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:
                   name: microservices-config
                   key: KAFKA_BOOTSTRAP_SERVERS
-
             - name: MAIL_HOST
               valueFrom:
                 configMapKeyRef:

@@ -22,6 +22,13 @@ spec:
           ports:
             - containerPort: 8090
               name: http
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
           env:
             - name: CONFIG_SERVER_URL
               valueFrom:
@@ -38,7 +45,8 @@ spec:
                 configMapKeyRef:
                   name: microservices-config
                   key: EUREKA_HOSTNAME
-            - name: MONGODB_URI
+            # 🔥 MongoDB Atlas Spring Boot Fix
+            - name: SPRING_DATA_MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: microservices-secrets
@@ -47,13 +55,13 @@ spec:
             httpGet:
               path: /actuator/health/readiness
               port: 8090
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8090
-            initialDelaySeconds: 40
+            initialDelaySeconds: 80
             periodSeconds: 20
 ---
 apiVersion: v1

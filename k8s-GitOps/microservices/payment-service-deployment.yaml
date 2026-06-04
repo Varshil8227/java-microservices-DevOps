@@ -22,6 +22,13 @@ spec:
           ports:
             - containerPort: 8060
               name: http
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
           env:
             - name: CONFIG_SERVER_URL
               valueFrom:
@@ -60,7 +67,8 @@ spec:
                 secretKeyRef:
                   name: microservices-secrets
                   key: DB_PASSWORD
-            - name: KAFKA_BOOTSTRAP_SERVERS
+            # 🔥 Kafka Connection Spring Boot Fix
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:
                   name: microservices-config
@@ -74,13 +82,13 @@ spec:
             httpGet:
               path: /actuator/health/readiness
               port: 8060
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8060
-            initialDelaySeconds: 40
+            initialDelaySeconds: 80
             periodSeconds: 20
 ---
 apiVersion: v1
