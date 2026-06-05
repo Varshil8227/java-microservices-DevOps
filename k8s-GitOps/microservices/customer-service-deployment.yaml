@@ -17,7 +17,7 @@
 #     spec:
 #       containers:
 #         - name: customer-service
-#           image: varshil1110/java-microservice-customer:d41e391684aeecf1cf6c461c3406dca57e4a05e0
+#           image: varshil1110/java-microservice-customer:2e5535f4f92878db30114e45cb58e6bbc90b080e
 #           imagePullPolicy: IfNotPresent
 #           ports:
 #             - containerPort: 8090
@@ -132,7 +132,7 @@ spec:
               echo "discovery-service UP"
       containers:
         - name: customer-service
-          image: varshil1110/java-microservice-customer:PLACEHOLDER
+          image: varshil1110/java-microservice-customer:2e5535f4f92878db30114e45cb58e6bbc90b080e
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8090
