@@ -38,7 +38,7 @@ spec:
               echo "discovery-service UP"
       containers:
         - name: product-service
-          image: varshil1110/java-microservice-product:53a91cb13759648d21adc4cf452042125104125e
+          image: varshil1110/java-microservice-product:be35f7b00ab777638e344b11cf5959312c944539
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8050

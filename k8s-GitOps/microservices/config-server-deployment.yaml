@@ -18,7 +18,7 @@ spec:
       # config-server has no dependencies - starts first, no initContainers needed
       containers:
         - name: config-server
-          image: varshil1110/java-microservice-config-server:53a91cb13759648d21adc4cf452042125104125e
+          image: varshil1110/java-microservice-config-server:be35f7b00ab777638e344b11cf5959312c944539
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8888

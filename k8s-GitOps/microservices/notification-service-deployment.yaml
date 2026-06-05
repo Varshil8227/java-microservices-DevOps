@@ -48,7 +48,7 @@ spec:
               echo "kafka UP"
       containers:
         - name: notification-service
-          image: varshil1110/java-microservice-notification:53a91cb13759648d21adc4cf452042125104125e
+          image: varshil1110/java-microservice-notification:be35f7b00ab777638e344b11cf5959312c944539
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8040

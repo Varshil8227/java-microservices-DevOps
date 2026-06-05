@@ -38,7 +38,7 @@ spec:
               echo "discovery-service UP"
       containers:
         - name: gateway-service
-          image: varshil1110/java-microservice-gateway:53a91cb13759648d21adc4cf452042125104125e
+          image: varshil1110/java-microservice-gateway:be35f7b00ab777638e344b11cf5959312c944539
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8222

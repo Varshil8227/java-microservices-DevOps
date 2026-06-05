@@ -30,7 +30,7 @@ spec:
               echo "config-server is UP! Starting discovery-service..."
       containers:
         - name: discovery-service
-          image: varshil1110/java-microservice-discovery:53a91cb13759648d21adc4cf452042125104125e
+          image: varshil1110/java-microservice-discovery:be35f7b00ab777638e344b11cf5959312c944539
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8761
