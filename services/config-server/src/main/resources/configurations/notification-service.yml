@@ -4,6 +4,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI:mongodb://alibou:alibou@localhost:27017/notification?authSource=admin}
+      database: ${MONGODB_DATABASE:notification}
   kafka:
     consumer:
       bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}

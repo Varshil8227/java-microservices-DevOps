@@ -51,6 +51,8 @@ spec:
                 secretKeyRef:
                   name: microservices-secrets
                   key: MONGODB_URI_CUSTOMER
+            - name: MONGODB_DATABASE
+              value: "customer"
             - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
               value: "true"
             - name: MANAGEMENT_HEALTH_LIVENESSSTATE_ENABLED

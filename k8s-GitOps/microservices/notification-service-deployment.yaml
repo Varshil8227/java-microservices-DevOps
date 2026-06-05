@@ -50,6 +50,8 @@ spec:
                 secretKeyRef:
                   name: microservices-secrets
                   key: MONGODB_URI_NOTIFICATION
+            - name: MONGODB_DATABASE
+              value: "notification"
             - name: KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:

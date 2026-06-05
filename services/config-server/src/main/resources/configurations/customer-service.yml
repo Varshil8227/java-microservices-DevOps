@@ -4,3 +4,4 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI:mongodb://alibou:alibou@localhost:27017/customer?authSource=admin}
+      database: ${MONGODB_DATABASE:customer}
