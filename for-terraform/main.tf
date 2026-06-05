@@ -120,6 +120,14 @@ resource "aws_security_group" "sg" {
     cidr_blocks = ["0.0.0.0/0"]
     }
 
+    ingress { 
+      description = "SMTPS" 
+      from_port = 587 
+      to_port = 587
+      protocol = "tcp" 
+      cidr_blocks = ["0.0.0.0/0"] 
+    }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -151,4 +159,3 @@ resource "aws_instance" "server" {
   }
 }
 
-# 8761 8090 8761 8222 8040 8070 8060 8050

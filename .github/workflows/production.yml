@@ -1,4 +1,4 @@
-name: Eventora CI/CD Pipeline
+name: java-microservices CI/CD Pipeline
 
 on:
   push:
@@ -11,9 +11,6 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
-  # ==========================================
-  # CI STAGE: Build and Verify all 8 services
-  # ==========================================
   verify-services:
     name: "CI — Java Services Verification"
     runs-on: ubuntu-latest
@@ -49,9 +46,7 @@ jobs:
           fi
         shell: bash
 
-  # ==========================================
-  # CD STAGE: Build and Push Docker Images
-  # ==========================================
+
   build-and-push-docker:
     name: "CD — Docker Build & Push"
     runs-on: ubuntu-24.04
@@ -87,9 +82,6 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ matrix.service }}
 
 
-  # ==========================================
-  # GITOPS STAGE: Update Manifests Automatically (Bulletproof Fix)
-  # ==========================================
   update-gitops:
     name: "GitOps — Update All Image Tags"
     runs-on: ubuntu-latest
