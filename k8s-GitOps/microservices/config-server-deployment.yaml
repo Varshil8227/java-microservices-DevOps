@@ -15,7 +15,7 @@
 #     spec:
 #       containers:
 #         - name: config-server
-#           image: varshil1110/java-microservice-config-server:7944eb8a6662244eeb2982c3b422e1f07ae8f648
+#           image: varshil1110/java-microservice-config-server:53a91cb13759648d21adc4cf452042125104125e
 #           ports:
 #             - containerPort: 8888
 #               name: http
@@ -82,7 +82,7 @@ spec:
       # config-server has no dependencies - starts first, no initContainers needed
       containers:
         - name: config-server
-          image: varshil1110/java-microservice-config-server:7944eb8a6662244eeb2982c3b422e1f07ae8f648
+          image: varshil1110/java-microservice-config-server:53a91cb13759648d21adc4cf452042125104125e
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8888
