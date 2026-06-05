@@ -1,36 +1,20 @@
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: microservices-ingress
-#   namespace: default
-#   annotations:
-#     kubernetes.io/ingress.class: "nginx"
-#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-#     nginx.ingress.kubernetes.io/use-regex: "true"
-# spec:
-#   rules:
-#     - host: ecommerce-microservices.local
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: gateway-service
-#                 port:
-#                   number: 8222
-
-
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: microservices-ingress
   namespace: default
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true" 
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
-  ingressClassName: nginx  # 👈 આ લાઇન મોસ્ટ ઇમ્પોર્ટન્ટ છે, અહીં એડ કરો!
+  ingressClassName: nginx
+  # 2. આ TLS બ્લોક સર્ટિફિકેટને સિક્રેટમાં સ્ટોર કરશે
+  tls:
+    - hosts:
+        - ecommerce-microservices.local 
+      secretName: ecommerce-tls-cert 
   rules:
     - host: ecommerce-microservices.local
       http:
@@ -42,3 +26,24 @@ spec:
                 name: gateway-service
                 port:
                   number: 8222
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: microservices-ingress
+#   namespace: default
+#   annotations:
+#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#     nginx.ingress.kubernetes.io/use-regex: "true"
+# spec:
+#   ingressClassName: nginx  # 👈 આ લાઇન મોસ્ટ ઇમ્પોર્ટન્ટ છે, અહીં એડ કરો!
+#   rules:
+#     - host: ecommerce-microservices.local
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: gateway-service
+#                 port:
+#                   number: 8222
