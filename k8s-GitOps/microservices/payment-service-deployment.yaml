@@ -17,7 +17,7 @@
 #     spec:
 #       containers:
 #         - name: payment-service
-#           image: varshil1110/java-microservice-payment:2e5535f4f92878db30114e45cb58e6bbc90b080e
+#           image: varshil1110/java-microservice-payment:7944eb8a6662244eeb2982c3b422e1f07ae8f648
 #           imagePullPolicy: IfNotPresent
 #           ports:
 #             - containerPort: 8060
@@ -156,7 +156,7 @@ spec:
               echo "discovery-service UP"
       containers:
         - name: payment-service
-          image: varshil1110/java-microservice-payment:2e5535f4f92878db30114e45cb58e6bbc90b080e
+          image: varshil1110/java-microservice-payment:7944eb8a6662244eeb2982c3b422e1f07ae8f648
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8060
