@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: discovery-service
-          image: varshil1110/java-microservice-discovery:bda199871dcd57d0fc91bb3076891931dd7815d8
+          image: varshil1110/java-microservice-discovery:3b3d29f42503272633048b3b0c14cbf4a6e0c9dc
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8761
