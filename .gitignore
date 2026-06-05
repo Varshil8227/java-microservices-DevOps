@@ -6,8 +6,6 @@ for-terraform/.terraform/
 *.tfvars.json
 *.terraform.tfstate.lock.info
 *.tfplan*
-.env
-**/secrets.yaml/**
 kubeseal
 *.tar.gz
 !k8s-GitOps/microservices/secrets.yaml
