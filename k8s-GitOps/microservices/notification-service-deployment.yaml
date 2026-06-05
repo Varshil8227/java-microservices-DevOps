@@ -1,3 +1,120 @@
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: notification-service
+#   namespace: default
+#   labels:
+#     app: notification-service
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: notification-service
+#   template:
+#     metadata:
+#       labels:
+#         app: notification-service
+#     spec:
+#       containers:
+#         - name: notification-service
+#           image: varshil1110/java-microservice-notification:d41e391684aeecf1cf6c461c3406dca57e4a05e0
+#           imagePullPolicy: IfNotPresent
+#           ports:
+#             - containerPort: 8040
+#               name: http
+#           resources:
+#             limits:
+#               cpu: "500m"
+#               memory: "512Mi"
+#             requests:
+#               cpu: "250m"
+#               memory: "256Mi"
+#           env:
+#             - name: CONFIG_SERVER_URL
+#               valueFrom:
+#                 configMapKeyRef:
+#                   name: microservices-config
+#                   key: CONFIG_SERVER_URL
+#             - name: EUREKA_SERVER_URL
+#               valueFrom:
+#                 configMapKeyRef:
+#                   name: microservices-config
+#                   key: EUREKA_SERVER_URL
+#             - name: EUREKA_HOSTNAME
+#               valueFrom:
+#                 configMapKeyRef:
+#                   name: microservices-config
+#                   key: EUREKA_HOSTNAME
+#             - name: MONGODB_URI
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: microservices-secrets
+#                   key: MONGODB_URI_NOTIFICATION
+#             - name: MONGODB_DATABASE
+#               value: "notification"
+#             - name: KAFKA_BOOTSTRAP_SERVERS
+#               valueFrom:
+#                 configMapKeyRef:
+#                   name: microservices-config
+#                   key: KAFKA_BOOTSTRAP_SERVERS
+#             - name: MAIL_HOST
+#               valueFrom:
+#                 configMapKeyRef:
+#                   name: microservices-config
+#                   key: MAIL_HOST
+#             - name: MAIL_PORT
+#               valueFrom:
+#                 configMapKeyRef:
+#                   name: microservices-config
+#                   key: MAIL_PORT
+#             - name: MAIL_USERNAME
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: microservices-secrets
+#                   key: MAIL_USERNAME
+#             - name: MAIL_PASSWORD
+#               valueFrom:
+#                 secretKeyRef:
+#                   name: microservices-secrets
+#                   key: MAIL_PASSWORD
+#             - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
+#               value: "true"
+#             - name: MANAGEMENT_HEALTH_LIVENESSSTATE_ENABLED
+#               value: "true"
+#             - name: MANAGEMENT_HEALTH_READINESSSTATE_ENABLED
+#               value: "true"
+#           startupProbe:
+#             httpGet:
+#               path: /actuator/health
+#               port: 8040
+#             failureThreshold: 30
+#             periodSeconds: 10
+#           readinessProbe:
+#             httpGet:
+#               path: /actuator/health/readiness
+#               port: 8040
+#             initialDelaySeconds: 60
+#             periodSeconds: 10
+#           livenessProbe:
+#             httpGet:
+#               path: /actuator/health/liveness
+#               port: 8040
+#             initialDelaySeconds: 80
+#             periodSeconds: 20
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: notification-service
+#   namespace: default
+# spec:
+#   ports:
+#     - port: 8040
+#       targetPort: 8040
+#   selector:
+#     app: notification-service
+
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,9 +132,40 @@ spec:
       labels:
         app: notification-service
     spec:
+      initContainers:
+        - name: wait-for-config-server
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              until wget -qO- http://config-server:8888/actuator/health 2>/dev/null | grep -q '"status":"UP"'; do
+                echo "Waiting for config-server..."; sleep 5
+              done
+              echo "config-server UP"
+        - name: wait-for-discovery
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              until wget -qO- http://discovery-service:8761/actuator/health 2>/dev/null | grep -q '"status":"UP"'; do
+                echo "Waiting for discovery-service..."; sleep 5
+              done
+              echo "discovery-service UP"
+        - name: wait-for-kafka
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z kafka-service 9092; do
+                echo "Waiting for kafka..."; sleep 5
+              done
+              echo "kafka UP"
       containers:
         - name: notification-service
-          image: varshil1110/java-microservice-notification:d41e391684aeecf1cf6c461c3406dca57e4a05e0
+          image: varshil1110/java-microservice-notification:PLACEHOLDER
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8040
@@ -45,62 +193,55 @@ spec:
                 configMapKeyRef:
                   name: microservices-config
                   key: EUREKA_HOSTNAME
-            - name: MONGODB_URI
+            - name: SPRING_DATA_MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: microservices-secrets
                   key: MONGODB_URI_NOTIFICATION
-            - name: MONGODB_DATABASE
-              value: "notification"
-            - name: KAFKA_BOOTSTRAP_SERVERS
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
               valueFrom:
                 configMapKeyRef:
                   name: microservices-config
                   key: KAFKA_BOOTSTRAP_SERVERS
-            - name: MAIL_HOST
+            - name: SPRING_MAIL_HOST
               valueFrom:
                 configMapKeyRef:
                   name: microservices-config
                   key: MAIL_HOST
-            - name: MAIL_PORT
+            - name: SPRING_MAIL_PORT
               valueFrom:
                 configMapKeyRef:
                   name: microservices-config
                   key: MAIL_PORT
-            - name: MAIL_USERNAME
+            - name: SPRING_MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: microservices-secrets
                   key: MAIL_USERNAME
-            - name: MAIL_PASSWORD
+            - name: SPRING_MAIL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: microservices-secrets
                   key: MAIL_PASSWORD
-            - name: MANAGEMENT_ENDPOINT_HEALTH_PROBES_ENABLED
-              value: "true"
-            - name: MANAGEMENT_HEALTH_LIVENESSSTATE_ENABLED
-              value: "true"
-            - name: MANAGEMENT_HEALTH_READINESSSTATE_ENABLED
-              value: "true"
-          startupProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8040
-            failureThreshold: 30
-            periodSeconds: 10
+            # KEY FIX: mail health check disable કરો - maildev-service cluster માં નથી
+            - name: MANAGEMENT_HEALTH_MAIL_ENABLED
+              value: "false"
+            - name: MANAGEMENT_TRACING_ENABLED
+              value: "false"
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8040
             initialDelaySeconds: 60
             periodSeconds: 10
+            failureThreshold: 10
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8040
             initialDelaySeconds: 80
             periodSeconds: 20
+            failureThreshold: 5
 ---
 apiVersion: v1
 kind: Service
