@@ -17,7 +17,7 @@
 #     spec:
 #       containers:
 #         - name: gateway-service
-#           image: varshil1110/java-microservice-gateway:2e5535f4f92878db30114e45cb58e6bbc90b080e
+#           image: varshil1110/java-microservice-gateway:7944eb8a6662244eeb2982c3b422e1f07ae8f648
 #           imagePullPolicy: IfNotPresent
 #           ports:
 #             - containerPort: 8222
@@ -123,7 +123,7 @@ spec:
               echo "discovery-service UP"
       containers:
         - name: gateway-service
-          image: varshil1110/java-microservice-gateway:2e5535f4f92878db30114e45cb58e6bbc90b080e
+          image: varshil1110/java-microservice-gateway:7944eb8a6662244eeb2982c3b422e1f07ae8f648
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8222
