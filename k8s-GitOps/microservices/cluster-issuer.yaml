@@ -5,7 +5,7 @@ metadata:
 spec:
   acme:
     # Let's Encrypt આ ઇમેઇલ પર તને સર્ટિફિકેટ એક્સપાયરીની નોટિફિકેશન મોકલશે
-    email: varshil@example.com 
+    email: vs.varshil299@gmail.com 
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: letsencrypt-prod-account-key
